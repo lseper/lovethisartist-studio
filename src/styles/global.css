@@ -1,0 +1,123 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+/*
+  Map Tailwind's compile-time theme onto the runtime CSS variables in
+  tokens.css so utilities (bg-accent, text-ink, font-display…) follow the
+  active [data-mode] skin.
+*/
+@theme {
+  --color-ink: var(--ink);
+  --color-ink-dim: var(--ink-dim);
+  --color-ink-faint: var(--ink-faint);
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-warn: var(--warn);
+  --color-go: var(--go);
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+
+  --radius-none: 0px;
+}
+
+/* ---- base ---- */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* Heavy grotesk display */
+.font-display {
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  letter-spacing: var(--tracking-display);
+  line-height: 0.92;
+}
+
+/* ALL-CAPS technical labels (nav, tags, meta) */
+.caps {
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  font-weight: 700;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Focus ring — accessible + on-brand (no glow blur / no gradient) */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Reusable primitives ---------------------------------------------------- */
+
+/* dash-prefixed list item, r3drunner style: "- 591 cub" */
+.dash-item::before {
+  content: "\2013\00a0"; /* en dash + nbsp */
+  color: var(--ink-faint);
+}
+
+/* full-bleed accent bar for the active nav row */
+.nav-active {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* underline-on-hover for tactile links (no image-on-hover slop) */
+.link-line {
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 2px;
+  transition: background-size var(--dur) var(--ease);
+}
+.link-line:hover,
+.link-line:focus-visible {
+  background-size: 100% 2px;
+}
+
+/* hairline divider */
+.rule {
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+@keyframes gate-scan {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(100%); }
+}

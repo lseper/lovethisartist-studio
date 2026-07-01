@@ -1,0 +1,82 @@
+/*
+  Design tokens — reverse-engineered from r3drunner.com's "technical software"
+  aesthetic, filtered through impeccable anti-slop rules.
+
+  Two brand skins are driven by [data-mode] on <html>:
+    - sfw  → "LOVE THIS ARTIST" — clean, electric spring-green accent
+    - nsfw → "HATE THIS ARTIST" — hotter, red accent
+
+  Runtime-swappable values live as CSS custom properties here; Tailwind's
+  compile-time @theme (global.css) maps utilities onto these vars.
+*/
+
+:root {
+  /* ---- monochrome base (shared) ---- */
+  --ink: #ffffff;            /* primary foreground */
+  --ink-dim: #8a8a8a;        /* secondary foreground */
+  --ink-faint: #4d4d4d;      /* tertiary / disabled */
+  --paper: #000000;          /* page background */
+  --surface: #0a0a0a;        /* raised surface */
+  --surface-2: #121212;      /* higher surface */
+  --line: #1e1e1e;           /* hairline borders */
+  --line-strong: #2c2c2c;
+
+  /* ---- semantic copy accents (shared, from the age-gate copy) ---- */
+  --warn: #ffe14d;           /* yellow — "eighteen years" */
+  --go: #4dff88;             /* green — "safe mode" */
+
+  /* ---- mode-driven accent (default = SFW) ---- */
+  --accent: #4dffb0;         /* spring-green */
+  --accent-ink: #000000;     /* text on accent fills */
+  --accent-dim: #1c4d3c;
+
+  /* ---- type ---- */
+  --font-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+
+  /* heavy, tight display weights (grotesk) */
+  --weight-display: 800;
+  --tracking-display: -0.02em;
+  --tracking-caps: 0.06em;   /* ALL-CAPS nav / tags */
+
+  /* fluid type scale */
+  --step--1: clamp(0.72rem, 0.68rem + 0.2vw, 0.8rem);
+  --step-0: clamp(0.85rem, 0.8rem + 0.25vw, 0.95rem);
+  --step-1: clamp(1.05rem, 0.95rem + 0.5vw, 1.35rem);
+  --step-2: clamp(1.4rem, 1.2rem + 1vw, 2rem);
+  --step-3: clamp(2rem, 1.6rem + 2vw, 3.25rem);
+  --step-4: clamp(3rem, 2rem + 6vw, 7rem);
+  --step-hero: clamp(5rem, 3rem + 18vw, 20rem);
+
+  /* ---- spacing / geometry ---- */
+  --gutter: clamp(1rem, 0.6rem + 1.5vw, 2rem);
+  --sidebar-w: 232px;
+  --radius: 0px;             /* brutalist: no over-rounding */
+  --radius-input: 2px;
+
+  /* ---- motion ---- */
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-fast: 120ms;
+  --dur: 220ms;
+  --dur-slow: 420ms;
+
+  --z-shell: 20;
+  --z-overlay: 60;
+  --z-gate: 100;
+}
+
+/* NSFW skin — "HATE THIS ARTIST" */
+[data-mode="nsfw"] {
+  --accent: #ff2d4d;
+  --accent-ink: #ffffff;
+  --accent-dim: #4d1620;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur: 0ms;
+    --dur-slow: 0ms;
+  }
+}

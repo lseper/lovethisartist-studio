@@ -1,0 +1,141 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHead from "@/components/PageHead.astro";
+import CommissionTool from "@/islands/commission/CommissionTool.tsx";
+import {
+  COMMISSION_STATUS,
+  QUEUE_URL,
+  TIMELINE,
+  TOS,
+} from "@/data/commission";
+
+const isOpen = COMMISSION_STATUS === "OPEN";
+---
+
+<BaseLayout title="COMMISSION · LOVE THIS ARTIST" active="commission">
+  <PageHead
+    kicker="Hire me"
+    title="COMMISSION"
+    blurb="Build an estimate, then send the details. I'll reach out within 24 hours."
+  />
+
+  <p class="status mono caps">
+    Commissions are: <span
+      class={isOpen ? "status-val open" : "status-val closed"}>{COMMISSION_STATUS}</span>
+  </p>
+
+  <CommissionTool client:load />
+
+  <section class="block" aria-labelledby="tos-h">
+    <h2 id="tos-h" class="font-display block-h">Terms</h2>
+    <ul class="tos">
+      {TOS.map((t) => <li class="tos-item">{t}</li>)}
+    </ul>
+  </section>
+
+  <section class="block" aria-labelledby="timeline-h">
+    <h2 id="timeline-h" class="font-display block-h">Timeline</h2>
+    <ol class="timeline">
+      {
+        TIMELINE.map((step) => (
+          <li class="step">
+            <span class="step-n mono">{String(step.n).padStart(2, "0")}</span>
+            <div class="step-body">
+              <h3 class="step-title caps">{step.title}</h3>
+              <p class="step-copy">{step.body}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="block queue-block">
+    <a
+      class="queue-btn caps"
+      href={QUEUE_URL}
+      target="_blank"
+      rel="noopener"
+    >
+      View the queue
+    </a>
+  </section>
+</BaseLayout>
+
+<style>
+  .status {
+    margin: 0 0 var(--gutter);
+    color: var(--ink-dim);
+    font-size: var(--step--1);
+  }
+  .status-val { font-weight: var(--weight-display); }
+  .status-val.open { color: var(--accent); }
+  .status-val.closed { color: var(--ink-faint); }
+
+  .block {
+    margin-top: calc(var(--gutter) * 2);
+    padding-top: var(--gutter);
+    border-top: 1px solid var(--line);
+  }
+  .block-h {
+    margin: 0 0 var(--gutter);
+    font-size: var(--step-2);
+  }
+
+  .tos { list-style: none; margin: 0; padding: 0; }
+  .tos-item {
+    display: flex;
+    gap: 0.6rem;
+    padding: 0.5rem 0;
+    color: var(--ink-dim);
+    font-size: var(--step-0);
+    border-bottom: 1px solid var(--line);
+  }
+  .tos-item::before {
+    content: "—";
+    color: var(--ink-faint);
+    flex: none;
+  }
+  .tos-item:last-child { border-bottom: 0; }
+
+  .timeline { list-style: none; margin: 0; padding: 0; }
+  .step {
+    display: grid;
+    grid-template-columns: 3ch 1fr;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .step:last-child { border-bottom: 0; }
+  .step-n {
+    color: var(--accent);
+    font-size: var(--step-1);
+    line-height: 1;
+  }
+  .step-title {
+    margin: 0 0 0.35rem;
+    color: var(--ink);
+    font-size: var(--step-0);
+    letter-spacing: var(--tracking-caps);
+  }
+  .step-copy {
+    margin: 0;
+    color: var(--ink-dim);
+    font-size: var(--step-0);
+    max-width: 68ch;
+  }
+
+  .queue-block { border-top: 0; }
+  .queue-btn {
+    display: inline-block;
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line-strong);
+    padding: 0.7rem 1.2rem;
+    font-size: var(--step--1);
+    letter-spacing: var(--tracking-caps);
+    text-decoration: none;
+    transition: background var(--dur-fast) var(--ease);
+  }
+  .queue-btn:hover { background: var(--surface); }
+</style>

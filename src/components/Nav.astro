@@ -1,0 +1,66 @@
+---
+interface Props {
+  active?: "art" | "links" | "stream" | "commission" | "home";
+}
+const { active = "home" } = Astro.props;
+
+const items = [
+  { id: "art", label: "ART", href: "/art", icon: "▨" },
+  { id: "links", label: "LINKS", href: "/links", icon: "⌘" },
+  { id: "stream", label: "STREAM", href: "/stream", icon: "◉" },
+  { id: "commission", label: "COMMISSION", href: "/commission", icon: "✎" },
+] as const;
+---
+
+<nav class="nav" aria-label="Primary">
+  {
+    items.map((item) => (
+      <a
+        href={item.href}
+        class:list={["row caps", { "nav-active": active === item.id }]}
+        aria-current={active === item.id ? "page" : undefined}
+      >
+        <span class="dash">–</span>
+        <span class="label">{item.label}</span>
+        <span class="icon mono" aria-hidden="true">
+          {item.icon}
+        </span>
+      </a>
+    ))
+  }
+</nav>
+
+<style>
+  .nav {
+    display: flex;
+    flex-direction: column;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem var(--gutter);
+    border-top: 1px solid var(--line);
+    font-size: var(--step-1);
+    transition: background var(--dur-fast) var(--ease),
+      color var(--dur-fast) var(--ease);
+  }
+  .row:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  .row:hover:not(.nav-active),
+  .row:focus-visible:not(.nav-active) {
+    background: var(--surface);
+  }
+  .dash {
+    color: var(--ink-faint);
+  }
+  .nav-active .dash {
+    color: var(--accent-ink);
+  }
+  .icon {
+    opacity: 0.8;
+    font-size: 0.9em;
+  }
+</style>

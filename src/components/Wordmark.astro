@@ -1,0 +1,44 @@
+---
+import { BRAND } from "@/data/config";
+
+interface Props {
+  /** Compact single-line variant for the sidebar. */
+  size?: "sidebar" | "hero";
+}
+const { size = "sidebar" } = Astro.props;
+---
+
+{/*
+  Mode-driven wordmark. Both strings are rendered; CSS shows the one matching
+  <html data-mode>, so it swaps with zero JS and no flash.
+*/}
+<a href="/" class:list={["wordmark", size]} aria-label="Home">
+  <span class="wm wm-sfw font-display">{BRAND.sfw}</span>
+  <span class="wm wm-nsfw font-display">{BRAND.nsfw}</span>
+</a>
+
+<style>
+  .wordmark {
+    display: inline-grid;
+  }
+  .wm {
+    grid-area: 1 / 1;
+    text-transform: uppercase;
+  }
+  .wordmark.sidebar .wm {
+    font-size: var(--step-2);
+    line-height: 0.9;
+  }
+  .wordmark.hero .wm {
+    font-size: var(--step-4);
+    line-height: 0.85;
+  }
+  /* Show only the active mode's wordmark. */
+  :global([data-mode="sfw"]) .wm-nsfw,
+  :global([data-mode="nsfw"]) .wm-sfw {
+    visibility: hidden;
+  }
+  .wm-nsfw {
+    color: var(--accent);
+  }
+</style>

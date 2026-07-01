@@ -1,0 +1,14 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHead from "@/components/PageHead.astro";
+import LinksHub from "@/islands/LinksHub.tsx";
+---
+
+<BaseLayout title="LINKS · LOVE THIS ARTIST" active="links">
+  <PageHead
+    kicker="Everywhere else"
+    title="LINKS"
+    blurb="Socials, streams, and support. Switch to NSFW to reveal explicit accounts."
+  />
+  <LinksHub client:load />
+</BaseLayout>

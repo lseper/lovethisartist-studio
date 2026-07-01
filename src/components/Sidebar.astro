@@ -1,0 +1,95 @@
+---
+import Wordmark from "@/components/Wordmark.astro";
+import Nav from "@/components/Nav.astro";
+import ModeControl from "@/islands/ModeControl.tsx";
+import Settings from "@/islands/Settings.tsx";
+import { VERSION } from "@/data/config";
+import { PATREON } from "@/data/socials";
+
+interface Props {
+  active?: "art" | "links" | "stream" | "commission" | "home";
+}
+const { active = "home" } = Astro.props;
+---
+
+<aside class="sidebar" aria-label="Site">
+  <div class="chrome caps mono">
+    <span>v{VERSION}</span>
+    <span class="dim">CHANGELOG · INFO</span>
+  </div>
+
+  <div class="brand">
+    <Wordmark size="sidebar" />
+    <p class="tagline caps">A doe on the internet</p>
+  </div>
+
+  <Nav active={active} />
+
+  <ModeControl client:load />
+
+  <Settings client:idle />
+
+  <a class="cta" href={PATREON} target="_blank" rel="noopener">
+    <span class="caps cta-lead">Want unreleased content?</span>
+    <span class="caps cta-sub">Subscribe from $3 →</span>
+  </a>
+</aside>
+
+<style>
+  .sidebar {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--line);
+    overflow-y: auto;
+    z-index: var(--z-shell);
+    background: var(--paper);
+  }
+  .chrome {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.5rem var(--gutter);
+    font-size: var(--step--1);
+    border-bottom: 1px solid var(--line);
+  }
+  .chrome .dim {
+    color: var(--ink-faint);
+  }
+  .brand {
+    padding: 1rem var(--gutter);
+  }
+  .tagline {
+    margin: 0.5rem 0 0;
+    color: var(--ink-dim);
+    font-size: var(--step--1);
+  }
+  .cta {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem var(--gutter);
+    border-top: 1px solid var(--line);
+    font-size: var(--step--1);
+    transition: background var(--dur-fast) var(--ease);
+  }
+  .cta:hover {
+    background: var(--surface);
+  }
+  .cta-lead {
+    color: var(--ink-dim);
+  }
+  .cta-sub {
+    color: var(--accent);
+  }
+  @media (max-width: 720px) {
+    .sidebar {
+      position: static;
+      height: auto;
+    }
+  }
+</style>

@@ -1,0 +1,68 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHead from "@/components/PageHead.astro";
+import StreamVault from "@/islands/StreamVault.tsx";
+import { SOCIALS } from "@/data/socials";
+
+// SFW live-stream channels render server-side for SEO.
+const liveChannels = SOCIALS.filter((s) => s.group === "stream" && !s.nsfw);
+---
+
+<BaseLayout title="STREAM · LOVE THIS ARTIST" active="stream">
+  <PageHead kicker="Live + video" title="STREAM" />
+
+  <section class="live">
+    <h2 class="caps live-head">LIVE CHANNELS</h2>
+    <ul class="live-grid">
+      {
+        liveChannels.map((c) => (
+          <li>
+            <a class="link-line live-anchor" href={c.url} target="_blank" rel="noopener">
+              <span class="live-label">{c.label}</span>
+              <span class="live-handle mono">{c.handle}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <hr class="rule vault-rule" />
+
+  <StreamVault client:load />
+</BaseLayout>
+
+<style>
+  .live {
+    margin-bottom: var(--gutter);
+  }
+  .live-head {
+    margin: 0 0 0.5rem;
+    color: var(--accent);
+    font-size: var(--step--1);
+  }
+  .live-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.5rem 1rem;
+  }
+  .live-anchor {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    color: var(--ink);
+  }
+  .live-label {
+    font-size: var(--step-1);
+  }
+  .live-handle {
+    color: var(--ink-dim);
+    font-size: var(--step--1);
+  }
+  .vault-rule {
+    margin: 0 0 var(--gutter);
+  }
+</style>

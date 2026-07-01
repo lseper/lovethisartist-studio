@@ -1,0 +1,20 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHead from "@/components/PageHead.astro";
+import Gallery from "@/islands/gallery/Gallery.tsx";
+import { loadArt } from "@/lib/art";
+import { visibleArt } from "@/lib/tags";
+
+// SSR only the SFW subset into the page; the island lazy-loads the rest.
+const all = await loadArt();
+const sfw = visibleArt(all, "sfw");
+---
+
+<BaseLayout title="ART · LOVE THIS ARTIST" active="art">
+  <PageHead
+    kicker="Gallery"
+    title="ART"
+    blurb="Filter by tag or search. Switch to NSFW to reveal explicit work."
+  />
+  <Gallery client:load initialArt={sfw} fullEndpoint="/art-full.json" />
+</BaseLayout>

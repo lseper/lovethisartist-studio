@@ -1,0 +1,136 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Wordmark from "@/components/Wordmark.astro";
+import HeroCanvas from "@/islands/HeroCanvas.tsx";
+import Slideshow from "@/islands/Slideshow.tsx";
+import { loadArt } from "@/lib/art";
+import { visibleArt } from "@/lib/tags";
+import { VERSION } from "@/data/config";
+
+// Landing is SFW-only so no explicit art appears by default.
+const all = await loadArt();
+const sfw = visibleArt(all, "sfw");
+const flagged = sfw.filter((a) => a.featured);
+// Fall back to the newest SFW pieces if too few are explicitly featured.
+const featuredSource = flagged.length >= 3 ? flagged : sfw.slice(0, 6);
+
+// Only pass a serializable subset to the island.
+const featured = featuredSource.map((a) => ({
+  id: a.id,
+  thumb: a.thumb,
+  full: a.full,
+  width: a.width,
+  height: a.height,
+  title: a.title,
+}));
+---
+
+<BaseLayout title="LOVE THIS ARTIST" active="home">
+  <section class="hero">
+    <HeroCanvas client:visible />
+
+    <div class="hero-body">
+      <p class="chrome caps mono">
+        <span>v{VERSION}</span>
+        <span class="dim">NEW POSTS REGULARLY</span>
+      </p>
+
+      <div class="hero-mark">
+        <Wordmark size="hero" />
+      </div>
+
+      <p class="tagline caps">A doe on the internet</p>
+
+      <div class="cta-row caps">
+        <a class="btn btn-primary" href="/art">Enter Gallery</a>
+        <a class="btn btn-ghost" href="/commission">Commission</a>
+      </div>
+    </div>
+  </section>
+
+  {
+    featured.length > 0 && (
+      <section class="featured">
+        <p class="featured-label caps mono">Featured</p>
+        <Slideshow client:visible art={featured} />
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: calc(100dvh - var(--gutter) * 2);
+    overflow: hidden;
+  }
+  .hero-body {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+  }
+  .chrome {
+    display: flex;
+    gap: 1rem;
+    font-size: var(--step--1);
+    color: var(--ink-dim);
+    margin: 0 0 2rem;
+  }
+  .chrome .dim {
+    color: var(--ink-faint);
+  }
+  .hero-mark {
+    /* let the giant wordmark bleed tight to the left edge */
+    margin: 0 0 1rem;
+  }
+  .tagline {
+    margin: 0 0 2rem;
+    color: var(--ink-dim);
+    font-size: var(--step-0);
+  }
+  .cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .btn {
+    display: inline-block;
+    padding: 0.85rem 1.5rem;
+    font-size: var(--step-0);
+    letter-spacing: var(--tracking-caps);
+    font-weight: 700;
+    border: 1px solid transparent;
+    transition:
+      background var(--dur-fast) var(--ease),
+      border-color var(--dur-fast) var(--ease),
+      color var(--dur-fast) var(--ease);
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+  .btn-primary:hover {
+    filter: brightness(1.1);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line-strong);
+  }
+  .btn-ghost:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .featured {
+    padding: var(--gutter) 0 0;
+    border-top: 1px solid var(--line);
+  }
+  .featured-label {
+    margin: 0 0 1rem;
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+</style>

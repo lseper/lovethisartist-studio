@@ -1,0 +1,36 @@
+---
+interface Props {
+  kicker: string;
+  title: string;
+  blurb?: string;
+}
+const { kicker, title, blurb } = Astro.props;
+---
+
+<header class="page-head">
+  <p class="kicker caps mono">{kicker}</p>
+  <h1 class="font-display page-title">{title}</h1>
+  {blurb && <p class="blurb">{blurb}</p>}
+</header>
+
+<style>
+  .page-head {
+    margin-bottom: var(--gutter);
+    padding-bottom: var(--gutter);
+    border-bottom: 1px solid var(--line);
+  }
+  .kicker {
+    margin: 0 0 0.35rem;
+    color: var(--accent);
+    font-size: var(--step--1);
+  }
+  .page-title {
+    margin: 0;
+    font-size: var(--step-3);
+  }
+  .blurb {
+    margin: 0.75rem 0 0;
+    max-width: 60ch;
+    color: var(--ink-dim);
+  }
+</style>
