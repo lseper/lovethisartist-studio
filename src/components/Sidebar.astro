@@ -7,7 +7,15 @@ import { VERSION } from "@/data/config";
 import { PATREON } from "@/data/socials";
 
 interface Props {
-  active?: "art" | "links" | "stream" | "commission" | "home";
+  active?:
+    | "art"
+    | "links"
+    | "stream"
+    | "events"
+    | "commission-monthlys"
+    | "commission-ychs"
+    | "commission-customs"
+    | "home";
 }
 const { active = "home" } = Astro.props;
 ---

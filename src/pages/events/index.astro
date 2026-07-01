@@ -1,0 +1,50 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHead from "@/components/PageHead.astro";
+import EventCard from "@/components/EventCard.astro";
+import { upcomingEvents } from "@/lib/events";
+
+const events = upcomingEvents();
+---
+
+<BaseLayout
+  title="EVENTS · LOVE THIS ARTIST"
+  description="Conventions, room parties, gallery showings, and nightclub popups Zaverose is hosting or attending."
+  active="events"
+  path="/events"
+>
+  <PageHead
+    kicker="In person"
+    title="EVENTS"
+    blurb="Conventions, room parties, gallery showings, and nightclub popups I'm hosting or attending. Soonest first."
+  />
+
+  {
+    events.length === 0 ? (
+      <p class="empty mono">No upcoming events right now — check back soon.</p>
+    ) : (
+      <div class="events">
+        {events.map((e) => (
+          <EventCard event={e} />
+        ))}
+      </div>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .events {
+    display: grid;
+    gap: var(--gutter);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 900px) {
+    .events {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .empty {
+    color: var(--ink-dim);
+    font-size: var(--step-0);
+  }
+</style>

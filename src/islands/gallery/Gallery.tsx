@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { Artwork } from "@/lib/art";
 import type { Mode } from "@/data/config";
 import { getMode, onModeChange } from "@/lib/mode";
-import { filterByTags, searchArt, tagCounts } from "@/lib/tags";
+import { filterByTags, tagCounts } from "@/lib/tags";
 import TagFilter from "./TagFilter";
 import Lightbox from "./Lightbox";
 
@@ -56,9 +56,17 @@ export default function Gallery({ initialArt, fullEndpoint }: Props) {
 
   const counts = useMemo(() => tagCounts(modeArt), [modeArt]);
 
-  const shown = useMemo(() => {
-    return searchArt(filterByTags(modeArt, active), query);
-  }, [modeArt, active, query]);
+  // The search box filters the tag list itself, not the artwork.
+  const shownTags = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return counts;
+    return counts.filter((t) => t.tag.toLowerCase().includes(q));
+  }, [counts, query]);
+
+  const shown = useMemo(
+    () => filterByTags(modeArt, active),
+    [modeArt, active]
+  );
 
   function toggleTag(tag: string) {
     setActive((prev) => {
@@ -83,7 +91,7 @@ export default function Gallery({ initialArt, fullEndpoint }: Props) {
         <TagFilter
           query={query}
           onQuery={setQuery}
-          tags={counts}
+          tags={shownTags}
           active={active}
           onToggleTag={toggleTag}
           onClear={() => setActive(new Set())}
@@ -129,7 +137,7 @@ export default function Gallery({ initialArt, fullEndpoint }: Props) {
         }
         .gallery-filter {
           position: sticky; top: var(--gutter);
-          max-height: calc(100dvh - var(--gutter) * 2);
+          height: calc(100dvh - var(--gutter) * 2);
           border-right: 1px solid var(--line);
           padding-right: var(--gutter);
         }
@@ -150,7 +158,7 @@ export default function Gallery({ initialArt, fullEndpoint }: Props) {
         @media (max-width: 960px) {
           .gallery { grid-template-columns: 1fr; }
           .gallery-filter {
-            position: static; max-height: none;
+            position: static; height: auto;
             border-right: 0; border-bottom: 1px solid var(--line);
             padding: 0 0 var(--gutter);
           }

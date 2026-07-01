@@ -1,0 +1,52 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import EventCard from "@/components/EventCard.astro";
+import { EVENTS } from "@/data/events";
+import { formatWhen } from "@/lib/events";
+
+// Generate a page for every event (including past ones) so old share links
+// keep resolving. The list page filters to upcoming; these stay live.
+export function getStaticPaths() {
+  return EVENTS.map((event) => ({ params: { slug: event.slug }, props: { event } }));
+}
+
+const { event } = Astro.props;
+
+const ogTitle = event.associatedEvent
+  ? `${event.title} · ${event.associatedEvent}`
+  : event.title;
+const ogDescription = `${formatWhen(event)} · ${event.location}. ${event.description}`;
+---
+
+<BaseLayout
+  title={`${event.title} · EVENTS · LOVE THIS ARTIST`}
+  description={event.description}
+  active="events"
+  path={`/events/${event.slug}`}
+  ogType="article"
+  ogTitle={ogTitle}
+  ogDescription={ogDescription}
+  ogImage={event.ogImage}
+>
+  <a class="back caps mono" href="/events">← All events</a>
+  <div class="detail">
+    <EventCard event={event} standalone />
+  </div>
+</BaseLayout>
+
+<style>
+  .back {
+    display: inline-block;
+    margin-bottom: var(--gutter);
+    color: var(--ink-dim);
+    font-size: var(--step--1);
+    letter-spacing: var(--tracking-caps);
+    text-decoration: none;
+  }
+  .back:hover {
+    color: var(--accent);
+  }
+  .detail {
+    max-width: 46rem;
+  }
+</style>

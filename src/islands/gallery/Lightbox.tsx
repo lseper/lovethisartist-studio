@@ -89,7 +89,11 @@ export default function Lightbox({ art, onClose, onNav }: Props) {
           background: color-mix(in srgb, var(--paper) 94%, transparent);
           display: grid;
           grid-template-columns: auto 1fr auto;
-          align-items: center;
+          /* safe center: when the figure is taller than the viewport (tall
+             images + a stray scrollbar), fall back to top-align so the top of
+             the image is never clipped and the rest stays scroll-reachable. */
+          align-items: safe center;
+          overflow-y: auto;
         }
         .lb-close {
           position: absolute; top: var(--gutter); right: var(--gutter);
@@ -108,15 +112,21 @@ export default function Lightbox({ art, onClose, onNav }: Props) {
           margin: 0; padding: var(--gutter);
           display: grid; gap: var(--gutter);
           grid-template-columns: minmax(0, 1fr) minmax(220px, 320px);
-          align-items: center; max-height: 100dvh;
+          align-items: safe center;
+          box-sizing: border-box;
         }
         .lb-imglink { display: block; min-width: 0; }
         .lb-img {
-          display: block; max-width: 100%; max-height: 82dvh;
+          display: block; max-width: 100%;
+          max-height: calc(100dvh - var(--gutter) * 2);
           width: auto; height: auto; margin: 0 auto;
           border: 1px solid var(--line);
         }
-        .lb-meta { min-width: 0; }
+        .lb-meta {
+          min-width: 0;
+          max-height: calc(100dvh - var(--gutter) * 2);
+          overflow-y: auto;
+        }
         .lb-title { font-size: var(--step-2); margin: 0 0 0.5rem; }
         .lb-rating { color: var(--accent); margin: 0 0 0.75rem; font-size: var(--step--1); }
         .lb-chars { color: var(--ink-dim); margin: 0 0 0.75rem; font-size: var(--step--1); }
@@ -130,7 +140,13 @@ export default function Lightbox({ art, onClose, onNav }: Props) {
         .lb-tags li::before { content: "#"; }
         .lb-full { color: var(--accent); display: inline-block; }
         @media (max-width: 720px) {
-          .lb-fig { grid-template-columns: 1fr; }
+          .lb { align-items: start; }
+          .lb-fig {
+            grid-template-columns: 1fr;
+            max-height: none; overflow: visible;
+          }
+          .lb-img { max-height: 70dvh; }
+          .lb-meta { max-height: none; overflow: visible; }
           .lb-arrow { font-size: var(--step-2); }
         }
       `}</style>

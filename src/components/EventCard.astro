@@ -1,0 +1,171 @@
+---
+import type { CaravanEvent } from "@/data/events";
+import {
+  eventShareUrl,
+  formatAges,
+  formatCost,
+  formatWhen,
+  mapsUrl,
+} from "@/lib/events";
+import ShareButton from "@/islands/events/ShareButton.tsx";
+
+interface Props {
+  event: CaravanEvent;
+  /** Detail view renders the title as plain text instead of a link. */
+  standalone?: boolean;
+}
+const { event, standalone = false } = Astro.props;
+
+const href = `/events/${event.slug}`;
+const when = formatWhen(event);
+const assocLabel =
+  event.role === "hosting"
+    ? "Hosting at"
+    : event.role === "vending"
+      ? "Vending at"
+      : "At";
+---
+
+<article class="event">
+  <header class="event-head">
+    {
+      event.associatedEvent && (
+        <p class="assoc caps mono">
+          {assocLabel} {event.associatedEvent}
+        </p>
+      )
+    }
+    <h2 class="font-display event-title">
+      {standalone ? event.title : <a href={href}>{event.title}</a>}
+    </h2>
+    <p class="when mono">{when}</p>
+  </header>
+
+  <p class="desc">{event.description}</p>
+
+  <ul class="meta">
+    <li class="meta-row">
+      <span class="meta-key caps mono">Where</span>
+      <a
+        class="meta-val link"
+        href={mapsUrl(event.location)}
+        target="_blank"
+        rel="noopener"
+      >
+        {event.location}
+      </a>
+    </li>
+    <li class="meta-row">
+      <span class="meta-key caps mono">Ages</span>
+      <span class="meta-val">{formatAges(event.ages)}</span>
+    </li>
+    <li class="meta-row">
+      <span class="meta-key caps mono">Cost</span>
+      <span class="meta-val">{formatCost(event.cost)}</span>
+    </li>
+  </ul>
+
+  <div class="actions">
+    <a class="rsvp caps" href={event.rsvp.url} target="_blank" rel="noopener">
+      {event.rsvp.label}
+    </a>
+    <ShareButton
+      client:visible
+      title={event.title}
+      text={`${event.title} — ${when}`}
+      url={eventShareUrl(event.slug)}
+    />
+  </div>
+</article>
+
+<style>
+  .event {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--line-strong);
+    padding: var(--gutter);
+  }
+  .event-head {
+    margin-bottom: 0.75rem;
+  }
+  .assoc {
+    margin: 0 0 0.35rem;
+    color: var(--accent);
+    font-size: var(--step--1);
+  }
+  .event-title {
+    margin: 0;
+    font-size: var(--step-2);
+  }
+  .event-title a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .event-title a:hover {
+    color: var(--accent);
+  }
+  .when {
+    margin: 0.4rem 0 0;
+    color: var(--ink-dim);
+    font-size: var(--step--1);
+  }
+  .desc {
+    margin: 0 0 var(--gutter);
+    color: var(--ink-dim);
+    font-size: var(--step-0);
+    max-width: 62ch;
+  }
+  .meta {
+    list-style: none;
+    margin: 0 0 var(--gutter);
+    padding: 0;
+    flex: 1;
+  }
+  .meta-row {
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    gap: 1rem;
+    align-items: baseline;
+    padding: 0.5rem 0;
+    border-top: 1px solid var(--line);
+    font-size: var(--step-0);
+  }
+  .meta-key {
+    color: var(--ink-faint);
+    font-size: var(--step--1);
+  }
+  .meta-val {
+    color: var(--ink);
+  }
+  .meta-val.link {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .meta-val.link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+  .rsvp {
+    flex: 1;
+    min-width: 12rem;
+    text-align: center;
+    background: var(--accent);
+    color: var(--accent-ink);
+    border: 1px solid var(--accent);
+    padding: 0.7rem 1.2rem;
+    font-size: var(--step--1);
+    letter-spacing: var(--tracking-caps);
+    text-decoration: none;
+    transition: filter var(--dur-fast) var(--ease);
+  }
+  .rsvp:hover {
+    filter: brightness(1.1);
+  }
+</style>

@@ -7,9 +7,24 @@ interface Props {
   title?: string;
   description?: string;
   /** Section id for active nav highlighting. */
-  active?: "art" | "links" | "stream" | "commission" | "home";
+  active?:
+    | "art"
+    | "links"
+    | "stream"
+    | "events"
+    | "commission-monthlys"
+    | "commission-ychs"
+    | "commission-customs"
+    | "home";
   /** Landing page renders without the persistent sidebar shell. */
   bare?: boolean;
+  /** Site-relative path for canonical + og:url (e.g. "/events"). */
+  path?: string;
+  ogType?: "website" | "article";
+  ogTitle?: string;
+  ogDescription?: string;
+  /** Site-relative or absolute image for the share card. */
+  ogImage?: string;
 }
 
 const {
@@ -17,11 +32,21 @@ const {
   description = "Art, streams, socials, and commissions.",
   active = "home",
   bare = false,
+  path,
+  ogType = "website",
+  ogTitle,
+  ogDescription,
+  ogImage,
 } = Astro.props;
 
 // Honor the mode cookie during SSR so the first paint matches the user's choice.
 const cookieMode = Astro.cookies.get(COOKIE.mode)?.value;
 const initialMode = cookieMode === "nsfw" ? "nsfw" : "sfw";
+
+const canonical = path ? new URL(path, Astro.site).href : undefined;
+const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).href : undefined;
+const shareTitle = ogTitle ?? title;
+const shareDescription = ogDescription ?? description;
 ---
 
 <!doctype html>
@@ -32,7 +57,23 @@ const initialMode = cookieMode === "nsfw" ? "nsfw" : "sfw";
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="robots" content="index, follow" />
+    {canonical && <link rel="canonical" href={canonical} />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    {/* Open Graph / Twitter — drives link-card embeds on Bluesky, X, Telegram. */}
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="LOVE THIS ARTIST" />
+    <meta property="og:title" content={shareTitle} />
+    <meta property="og:description" content={shareDescription} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+    <meta
+      name="twitter:card"
+      content={ogImageUrl ? "summary_large_image" : "summary"}
+    />
+    <meta name="twitter:title" content={shareTitle} />
+    <meta name="twitter:description" content={shareDescription} />
+    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
     {/* Pre-paint: reconcile <html data-mode> with the cookie to avoid a flash. */}
     <script is:inline define:vars={{ key: COOKIE.mode }}>
       try {

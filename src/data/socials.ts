@@ -17,6 +17,8 @@ export interface SocialLink {
 
 export const EMAIL = "zaverosearts@gmail.com";
 export const PATREON = "https://patreon.com/ZaveroseArt";
+// TODO(zav): confirm real SubscribeStar URL (used for the e621 Favorites monthly).
+export const SUBSCRIBESTAR = "https://subscribestar.adult/zaverose";
 export const TRELLO_QUEUE = "https://trello.com/b/H51HnCLL/zavs-commission-queue";
 
 export const SOCIALS: SocialLink[] = [

@@ -1,0 +1,130 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHead from "@/components/PageHead.astro";
+import { MONTHLY_OFFERINGS } from "@/data/commission";
+---
+
+<BaseLayout title="MONTHLYS · LOVE THIS ARTIST" active="commission-monthlys">
+  <PageHead
+    kicker="Subscribe"
+    title="MONTHLYS"
+    blurb="Recurring pieces of your character, drawn every month for as long as you're subscribed."
+  />
+
+  <div class="offerings">
+    {
+      MONTHLY_OFFERINGS.map((o) => (
+        <section class="offer" aria-labelledby={`offer-${o.slug}`}>
+          <header class="offer-head">
+            <span class="offer-platform mono caps">via {o.platform}</span>
+            <h2 id={`offer-${o.slug}`} class="font-display offer-title">
+              {o.title}
+            </h2>
+            <p class="offer-blurb">{o.blurb}</p>
+            <p class="offer-need mono">{o.need}</p>
+          </header>
+
+          <ul class="tiers">
+            {o.tiers.map((t) => (
+              <li class="tier">
+                <div class="tier-top">
+                  <span class="tier-name caps">{t.name}</span>
+                  <span class="tier-price mono">${t.price}/mo</span>
+                </div>
+                <p class="tier-blurb">{t.blurb}</p>
+              </li>
+            ))}
+          </ul>
+
+          <a
+            class="sub-btn caps"
+            href={o.subscribeUrl}
+            target="_blank"
+            rel="noopener"
+          >
+            Subscribe on {o.platform}
+          </a>
+        </section>
+      ))
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .offerings {
+    display: grid;
+    gap: var(--gutter);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 900px) {
+    .offerings { grid-template-columns: 1fr 1fr; }
+  }
+
+  .offer {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--line-strong);
+    padding: var(--gutter);
+  }
+  .offer-head { margin: 0 0 var(--gutter); }
+  .offer-platform {
+    color: var(--accent);
+    font-size: var(--step--1);
+  }
+  .offer-title {
+    margin: 0.35rem 0 0.5rem;
+    font-size: var(--step-2);
+  }
+  .offer-blurb {
+    margin: 0 0 0.75rem;
+    color: var(--ink-dim);
+    font-size: var(--step-0);
+  }
+  .offer-need {
+    margin: 0;
+    color: var(--ink-faint);
+    font-size: var(--step--1);
+  }
+
+  .tiers {
+    list-style: none;
+    margin: 0 0 var(--gutter);
+    padding: 0;
+    flex: 1;
+  }
+  .tier {
+    padding: 0.75rem 0;
+    border-top: 1px solid var(--line);
+  }
+  .tier-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+  }
+  .tier-name {
+    color: var(--ink);
+    font-size: var(--step-0);
+    letter-spacing: var(--tracking-caps);
+  }
+  .tier-price { color: var(--accent); font-size: var(--step-0); }
+  .tier-blurb {
+    margin: 0.35rem 0 0;
+    color: var(--ink-dim);
+    font-size: var(--step--1);
+  }
+
+  .sub-btn {
+    display: block;
+    text-align: center;
+    background: var(--accent);
+    color: var(--accent-ink);
+    border: 1px solid var(--accent);
+    padding: 0.7rem 1.2rem;
+    font-size: var(--step--1);
+    letter-spacing: var(--tracking-caps);
+    text-decoration: none;
+    transition: filter var(--dur-fast) var(--ease);
+  }
+  .sub-btn:hover { filter: brightness(1.1); }
+</style>

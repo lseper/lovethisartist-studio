@@ -1,0 +1,37 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHead from "@/components/PageHead.astro";
+import YchGallery, {
+  type YchCard,
+} from "@/islands/commission/YchGallery.tsx";
+import { YCH_OFFERINGS } from "@/data/commission";
+import { loadArt } from "@/lib/art";
+
+/*
+  Placeholder art: pick safe-rated pieces only so no explicit URLs land in the
+  SSR-SFW-default HTML. Each YCH slot is zipped with one image. Real YCH art
+  will be posted automatically by the generation engine later.
+*/
+const safe = (await loadArt()).filter((a) => a.rating === "s");
+const cards: YchCard[] = YCH_OFFERINGS.map((y, i) => {
+  const art = safe[i % safe.length];
+  return {
+    slug: y.slug,
+    title: y.title,
+    price: y.price,
+    thumb: art.thumb,
+    width: art.width,
+    height: art.height,
+  };
+});
+---
+
+<BaseLayout title="YCHS · LOVE THIS ARTIST" active="commission-ychs">
+  <PageHead
+    kicker="Grab a slot"
+    title="YCHS"
+    blurb="Your character here. Claim a slot below — hover for the price, then order."
+  />
+
+  <YchGallery offerings={cards} client:load />
+</BaseLayout>

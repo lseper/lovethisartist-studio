@@ -1,4 +1,4 @@
-import { EMAIL, TRELLO_QUEUE } from "@/data/socials";
+import { EMAIL, PATREON, SUBSCRIBESTAR, TRELLO_QUEUE } from "@/data/socials";
 
 /*
   Commission content, ported from the carrd site's TOS + 8-step timeline.
@@ -69,4 +69,109 @@ export const TOS: string[] = [
   "You get 3 revision requests at the sketch stage. Large changes after the sketch is approved may be refused if too time-consuming.",
   "Commissions are for personal use. Ask first about commercial usage.",
   "I reserve the right to decline any commission request.",
+];
+
+/* -------------------------------------------------------------------------- *
+   Monthlys — recurring subscription offerings billed through Patreon /
+   SubscribeStar. Prices are placeholders until Zav sets the real tiers.
+ * -------------------------------------------------------------------------- */
+
+export interface MonthlyTier {
+  level: "low" | "mid" | "high";
+  name: string;
+  price: number; // TODO(zav): confirm real monthly tier prices
+  blurb: string;
+}
+
+export interface MonthlyOffering {
+  slug: string;
+  title: string;
+  platform: "Patreon" | "SubscribeStar";
+  subscribeUrl: string;
+  blurb: string;
+  need: string; // what the subscriber has to hand over each month
+  tiers: MonthlyTier[];
+}
+
+export const MONTHLY_OFFERINGS: MonthlyOffering[] = [
+  {
+    slug: "fursuit",
+    title: "Fursuit Sketches · Sketch Pages · Paintings",
+    platform: "Patreon",
+    subscribeUrl: PATREON,
+    blurb:
+      "Traditional, hand-made pieces of your fursuiter, drawn monthly for as long as you're subscribed. SFW or NSFW.",
+    need: "Just drop a link to your ever-growing fursuit gallery (Bluesky, Furtrack, Twitter, etc.) and I'll work from your escapades.",
+    tiers: [
+      {
+        level: "low",
+        name: "Traditional Sketch",
+        price: 25, // TODO(zav): confirm
+        blurb: "A loose traditional SFW/NSFW sketch of your fursuiter each month.",
+      },
+      {
+        level: "mid",
+        name: "Traditional Sketch Page",
+        price: 55, // TODO(zav): confirm
+        blurb: "A full traditional sketch page — multiple poses / expressions.",
+      },
+      {
+        level: "high",
+        name: "Acrylic Painting",
+        price: 120, // TODO(zav): confirm
+        blurb: "A finished traditional acrylic painting, shipped to you.",
+      },
+    ],
+  },
+  {
+    slug: "e621-favorites",
+    title: "e621 Favorites Delivery",
+    platform: "SubscribeStar",
+    subscribeUrl: SUBSCRIBESTAR,
+    blurb:
+      "A monthly kink-themed piece of your character, drawn from what you actually love — pulled straight from your e621 favorites.",
+    need: "Give me your e621 username; each month I'll draw your character in themes based on your favorites.",
+    tiers: [
+      {
+        level: "low",
+        name: "Sketch",
+        price: 30, // TODO(zav): confirm
+        blurb: "A monthly sketch of your character in a kink theme from your favorites.",
+      },
+      {
+        level: "mid",
+        name: "Sketch Page",
+        price: 65, // TODO(zav): confirm
+        blurb: "A monthly sketch page exploring multiple themes from your favorites.",
+      },
+      {
+        level: "high",
+        name: "Digital Render",
+        price: 140, // TODO(zav): confirm
+        blurb: "A fully rendered digital piece each month, themed to your favorites.",
+      },
+    ],
+  },
+];
+
+/* -------------------------------------------------------------------------- *
+   YCHs — one-off "your character here" slots. Prices/titles are placeholders;
+   the images are assigned at build time from safe-rated gallery art (see
+   pages/commission/ychs.astro) so no explicit URLs land in the SFW HTML.
+   These will eventually be posted automatically by the generation engine.
+ * -------------------------------------------------------------------------- */
+
+export interface YchOffering {
+  slug: string; // request-form item id becomes `ych-${slug}`
+  title: string;
+  price: number; // TODO(zav): confirm real YCH prices
+}
+
+export const YCH_OFFERINGS: YchOffering[] = [
+  { slug: "skyline-duo", title: "Skyline Duo", price: 85 },
+  { slug: "cozy-winter", title: "Cozy Winter", price: 65 },
+  { slug: "neon-alley", title: "Neon Alley", price: 90 },
+  { slug: "spring-bloom", title: "Spring Bloom", price: 70 },
+  { slug: "midnight-lounge", title: "Midnight Lounge", price: 110 },
+  { slug: "beach-day", title: "Beach Day", price: 75 },
 ];

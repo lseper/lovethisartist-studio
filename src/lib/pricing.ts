@@ -4,9 +4,9 @@
 
   Base option prices are reproduced verbatim. The count categories
   (characters / pages) apply a percentage surcharge on the subtotal that
-  scales with the count, matching the documented intent (2 → 0.25% …
-  >5 → 1.25%); the old inline script encoded this as a flat rate, which was a
-  bug. Sticker counts are flat surcharges, as before.
+  scales with the count (2 → 25% … >5 → 125%): each extra character/page is
+  significant added work, so 5 characters roughly doubles the subtotal.
+  Sticker counts are flat surcharges, as before.
 */
 
 export type CategoryId =
@@ -116,11 +116,11 @@ export const CATEGORIES: Category[] = [
       values: ["type-multi-pinup", "type-scene", "type-story"],
     },
     options: [
-      { id: "chars-2", label: "2", price: 0, surchargePct: 0.0025 },
-      { id: "chars-3", label: "3", price: 0, surchargePct: 0.005 },
-      { id: "chars-4", label: "4", price: 0, surchargePct: 0.0075 },
-      { id: "chars-5", label: "5", price: 0, surchargePct: 0.01 },
-      { id: "chars-gt5", label: ">5", price: 0, surchargePct: 0.0125 },
+      { id: "chars-2", label: "2", price: 0, surchargePct: 0.25 },
+      { id: "chars-3", label: "3", price: 0, surchargePct: 0.5 },
+      { id: "chars-4", label: "4", price: 0, surchargePct: 0.75 },
+      { id: "chars-5", label: "5", price: 0, surchargePct: 1.0 },
+      { id: "chars-gt5", label: ">5", price: 0, surchargePct: 1.25 },
     ],
   },
   {
@@ -128,11 +128,11 @@ export const CATEGORIES: Category[] = [
     label: "Number of Pages",
     dependsOn: { category: "commission-type", values: ["type-story"] },
     options: [
-      { id: "pages-2", label: "2", price: 0, surchargePct: 0.0025 },
-      { id: "pages-3", label: "3", price: 0, surchargePct: 0.005 },
-      { id: "pages-4", label: "4", price: 0, surchargePct: 0.0075 },
-      { id: "pages-5", label: "5", price: 0, surchargePct: 0.01 },
-      { id: "pages-gt5", label: ">5", price: 0, surchargePct: 0.0125 },
+      { id: "pages-2", label: "2", price: 0, surchargePct: 0.25 },
+      { id: "pages-3", label: "3", price: 0, surchargePct: 0.5 },
+      { id: "pages-4", label: "4", price: 0, surchargePct: 0.75 },
+      { id: "pages-5", label: "5", price: 0, surchargePct: 1.0 },
+      { id: "pages-gt5", label: ">5", price: 0, surchargePct: 1.25 },
     ],
   },
   {
