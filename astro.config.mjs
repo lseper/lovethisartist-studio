@@ -4,7 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build
 export default defineConfig({
-  site: "https://lovethisartist.studio",
+  site: "https://thisartist.studio",
   redirects: {
     "/commission": "/commission/monthlys",
   },
