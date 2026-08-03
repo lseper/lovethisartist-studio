@@ -1,0 +1,20 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHead from "@/components/PageHead.astro";
+import VotingBooth from "@/islands/community/VotingBooth.tsx";
+---
+
+<BaseLayout
+  title="VOTING · LOVE THIS ARTIST"
+  description="Vote on what gets painted next on stream, live."
+  active="community-voting"
+  path="/community/voting"
+>
+  <PageHead
+    kicker="Community"
+    title="VOTING"
+    blurb="Vote on what I paint next on stream. Results update live — come back after voting closes to see what won."
+  />
+
+  <VotingBooth client:load />
+</BaseLayout>

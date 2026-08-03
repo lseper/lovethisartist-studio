@@ -1,0 +1,67 @@
+// Community voting's only backend rules. Not auto-deployed by CI — this
+// repo has no Firebase CLI step. Paste this whole file into the Firebase
+// console: your project -> Firestore Database -> Rules -> Publish.
+//
+// See src/lib/firebase.ts for the client setup this pairs with, and
+// src/data/voting.ts for where poll definitions (questions, options,
+// votesPerPerson, timers) actually live — NOT in Firestore. This database
+// only ever holds two things per poll: option vote tallies, and one dedup
+// doc per voter used to cap ballots per person.
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global ceiling on ballots per voter, per poll. Every poll's
+    // `votesPerPerson` in src/data/voting.ts must stay <= this. Bump this
+    // constant (and Publish again) if a poll genuinely needs more.
+    function maxVotesPerPoll() {
+      return 10;
+    }
+
+    match /polls/{pollId} {
+
+      // One doc per (questionId, optionId) tally. Publicly readable so the
+      // live-results UI can subscribe; writes are only ever a strict +1,
+      // enforced by comparing the new value to the previous one.
+      match /optionTallies/{tallyId} {
+        allow read: if true;
+
+        allow create: if request.resource.data.keys().hasOnly(['count'])
+                      && request.resource.data.count == 1;
+
+        allow update: if request.resource.data.keys().hasOnly(['count'])
+                      && request.resource.data.count is int
+                      && request.resource.data.count == resource.data.count + 1;
+
+        allow delete: if false;
+      }
+
+      // One doc per browser-generated voter id (opaque random UUID, no
+      // PII). Tracks how many ballots that id has cast on this poll.
+      match /voters/{voterId} {
+        allow read: if true;
+
+        allow create: if request.resource.data.keys().hasOnly(['count', 'lastVotedAt'])
+                      && request.resource.data.count == 1;
+
+        allow update: if request.resource.data.keys().hasOnly(['count', 'lastVotedAt'])
+                      && request.resource.data.count is int
+                      && request.resource.data.count == resource.data.count + 1
+                      && request.resource.data.count <= maxVotesPerPoll();
+
+        allow delete: if false;
+      }
+    }
+
+    // Default-deny: Firestore denies any path with no matching allow rule.
+  }
+}
+
+// Known limitation (accepted, not fixable without a real backend/auth):
+// each optionTallies write and each voters write is individually validated
+// as a legal +1, but the two aren't validated *together*. A visitor who
+// bypasses the app's UI and calls the Firestore SDK directly could still
+// bump an optionTallies count repeatedly without touching their own voters
+// doc. Same class of gap as the localStorage-clearing bypass on the client
+// side — deterring casual double-voting is the realistic goal here, not
+// stopping a determined adversary.

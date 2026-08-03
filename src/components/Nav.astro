@@ -8,6 +8,7 @@ interface Props {
     | "commission-monthlys"
     | "commission-ychs"
     | "commission-customs"
+    | "community-voting"
     | "home";
 }
 const { active = "home" } = Astro.props;
@@ -23,6 +24,10 @@ const commissions = [
   { id: "commission-monthlys", label: "MONTHLYS", href: "/commission/monthlys" },
   { id: "commission-ychs", label: "YCHS", href: "/commission/ychs" },
   { id: "commission-customs", label: "CUSTOMS", href: "/commission/customs" },
+] as const;
+
+const community = [
+  { id: "community-voting", label: "VOTING", href: "/community/voting" },
 ] as const;
 ---
 
@@ -49,6 +54,23 @@ const commissions = [
   </div>
   {
     commissions.map((item) => (
+      <a
+        href={item.href}
+        class:list={["row sub caps", { "nav-active": active === item.id }]}
+        aria-current={active === item.id ? "page" : undefined}
+      >
+        <span class="dash">–</span>
+        <span class="label">{item.label}</span>
+      </a>
+    ))
+  }
+
+  <div class="group">
+    <span class="group-head caps mono">Community</span>
+    <span class="icon mono" aria-hidden="true">◎</span>
+  </div>
+  {
+    community.map((item) => (
       <a
         href={item.href}
         class:list={["row sub caps", { "nav-active": active === item.id }]}
