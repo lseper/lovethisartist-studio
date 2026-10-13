@@ -9,7 +9,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "import:e621": "node scripts/import-e621.mjs"
+    "import:e621": "node scripts/import-e621.mjs --ids galleryIds.txt"
   },
   "dependencies": {
     "@astrojs/react": "^4.2.0",

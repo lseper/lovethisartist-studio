@@ -57,7 +57,7 @@ scripts/import-e621.mjs
   The explicit set is lazy-fetched client-side from `/art-full.json` only after
   the visitor age-verifies into NSFW mode.
 - First NSFW switch → 18+ age gate (cookie-remembered). NSFW flips the wordmark
-  to HATE THIS ARTIST and the accent to red.
+  to KILL THIS ARTIST and the accent to red.
 - The `Astro.request.headers` build warnings are expected: pages are prerendered
   (default SFW), and a pre-paint inline script in `BaseLayout` applies the real
   mode on the client.

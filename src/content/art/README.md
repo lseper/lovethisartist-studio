@@ -1,50 +1,54 @@
 # Adding artwork
 
-Each piece is one JSON file in `entries/`. Thumbnails live in
-`public/art/thumbs/` (small, pre-made **AVIF**); the hi-res JPEG the thumbnail
-links to lives in `public/art/full/` **or** on an external CDN/R2 URL.
+The gallery reads two manifests (see `src/content.config.ts`):
 
-## 1. Drop the images
+- `zaverose.json` — **generated**, don't hand-edit. `npm run import:e621`
+  fetches exactly the post IDs listed in `galleryIds.txt` (repo root) and
+  rewrites this file.
+- `external.json` — **hand-curated** pieces from other platforms (Cara,
+  Bluesky, …). The importer never touches it.
 
-```
-website/public/art/thumbs/my-piece.avif   # small, high-quality AVIF
-website/public/art/full/my-piece.jpg       # hi-res JPEG (or use a full URL)
-```
+## e621 posts
 
-Aim for thumbnails ~1000px on the long edge. Keep them small — they load in the
-grid. The JPEG is only fetched when someone clicks through.
+Add the post ID (or the full post URL) to `galleryIds.txt`, then run
+`npm run import:e621`.
 
-## 2. Add an entry
+## Other platforms
 
-`entries/my-piece.json`:
+Add an entry to `external.json`:
 
 ```json
 {
-  "title": "Title",
-  "date": "2026-06-01",
-  "rating": "s",                       // e621 letter: s | q | e
-  "avif": "/art/thumbs/my-piece.avif",
-  "full": "/art/full/my-piece.jpg",    // or "https://cdn.example/.../my-piece.jpg"
-  "width": 1000,
-  "height": 1400,                       // intrinsic thumbnail size (no layout shift)
-  "tags": ["solo", "canine", "colored"],
-  "characters": ["Zaverose"],
-  "featured": false                     // pin to landing slideshow
+  "id": "cara-6892157c",            // unique; prefix with the platform
+  "title": "Home",
+  "date": "2026-05-14T00:16:37.277Z",
+  "rating": "s",                    // e621 letter: s | q | e
+  "thumb": "/art/cara/6892157c-thumb.jpg",
+  "full": "/art/cara/6892157c-full.jpg",
+  "width": 750,                     // intrinsic thumb size (no layout shift)
+  "height": 1250,
+  "tags": ["digital"],
+  "characters": [],
+  "source": "https://cara.app/post/…",
+  "featured": false
 }
 ```
 
-## Ratings drive SFW/NSFW
+- **Cara** blocks hotlinking (Cloudflare) and its URLs carry daily-expiring
+  tokens, so save the images into `public/art/cara/` (~750px thumb, ~1920px
+  full).
+- **Bluesky** CDN URLs can be linked directly: `feed_thumbnail` for `thumb`,
+  `feed_fullsize` for `full`.
 
-`rating` uses the e621 letters:
+## Ratings drive SFW/NSFW
 
 - `s` — safe
 - `q` — questionable
 - `e` — explicit
 
-The cutoff for what counts as NSFW is `RATING_THRESHOLD` in
-`src/data/config.ts` (default `e`: SFW mode shows `s`+`q`, NSFW reveals `e`).
+The cutoff is `RATING_THRESHOLD` in `src/data/config.ts` (default `e`: SFW
+mode shows `s`+`q`, NSFW reveals `e`).
 
-## Bulk import from e621
+## Rotated uploads
 
-If a piece is on e621, `npm run import:e621 -- <postId> [<postId> …]` scaffolds
-entries with tags + rating pre-filled. See `scripts/import-e621.mjs`.
+If a source image is stored sideways, add its `id` to `src/data/rotations.ts`.

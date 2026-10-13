@@ -12,25 +12,39 @@ import { file } from "astro/loaders";
   To self-host later, regenerate the manifest with local `thumb`/`full` paths
   (see src/content/art/README.md).
 */
-const art = defineCollection({
-  loader: file("src/content/art/zaverose.json"),
-  schema: z.object({
-    title: z.string(),
-    date: z.coerce.date(),
-    rating: z.enum(["s", "q", "e"]),
-    /** Thumbnail URL (e621 sample image, or a local /public path). */
-    thumb: z.string(),
-    /** Hi-res URL the thumbnail links to (e621 file, or local /public path). */
-    full: z.string(),
-    /** Intrinsic thumbnail dimensions — required to avoid layout shift. */
-    width: z.number().int().positive(),
-    height: z.number().int().positive(),
-    tags: z.array(z.string()).default([]),
-    characters: z.array(z.string()).default([]),
-    description: z.string().optional(),
-    e621PostId: z.number().int().positive().optional(),
-    featured: z.boolean().default(false),
-  }),
+const artSchema = z.object({
+  title: z.string(),
+  date: z.coerce.date(),
+  rating: z.enum(["s", "q", "e"]),
+  /** Thumbnail URL (e621 sample image, or a local /public path). */
+  thumb: z.string(),
+  /** Hi-res URL the thumbnail links to (e621 file, or local /public path). */
+  full: z.string(),
+  /** Intrinsic thumbnail dimensions — required to avoid layout shift. */
+  width: z.number().int().positive(),
+  height: z.number().int().positive(),
+  tags: z.array(z.string()).default([]),
+  characters: z.array(z.string()).default([]),
+  description: z.string().optional(),
+  e621PostId: z.number().int().positive().optional(),
+  featured: z.boolean().default(false),
+  /** Original post URL for pieces not from e621 (Cara, Bluesky, …). */
+  source: z.string().url().optional(),
 });
 
-export const collections = { art };
+const art = defineCollection({
+  loader: file("src/content/art/zaverose.json"),
+  schema: artSchema,
+});
+
+/*
+  Hand-curated pieces from other platforms, kept out of zaverose.json so
+  `npm run import:e621` never overwrites them. Cara blocks hotlinking, so its
+  images are saved under public/art/cara/; Bluesky CDN URLs are linked as-is.
+*/
+const artExternal = defineCollection({
+  loader: file("src/content/art/external.json"),
+  schema: artSchema,
+});
+
+export const collections = { art, artExternal };

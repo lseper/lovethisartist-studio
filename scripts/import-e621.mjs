@@ -10,11 +10,15 @@
     node scripts/import-e621.mjs                 # all posts tagged `zaverose`
     node scripts/import-e621.mjs --tags "zaverose solo"
     node scripts/import-e621.mjs --max 200
+    node scripts/import-e621.mjs --ids galleryIds.txt   # only these post IDs
+
+  --ids takes a file of e621 post IDs (one per line, or full post URLs) and
+  fetches exactly those posts — nothing else is requested. It overrides --tags.
 
   Note: some login-gated posts (e.g. certain tags) return null file URLs when
   unauthenticated; those are skipped since they can't be displayed.
 */
-import { writeFile, mkdir } from "node:fs/promises";
+import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -27,7 +31,18 @@ function arg(flag, fallback) {
   return i >= 0 && process.argv[i + 1] ? process.argv[i + 1] : fallback;
 }
 
-const TAGS = arg("--tags", "zaverose");
+const IDS_FILE = arg("--ids", null);
+const IDS = IDS_FILE
+  ? [
+      ...new Set(
+        [...(await readFile(IDS_FILE, "utf8")).matchAll(/(?:posts\/)?(\d+)/g)].map(
+          (m) => m[1]
+        )
+      ),
+    ]
+  : null;
+if (IDS && IDS.length === 0) throw new Error(`no post IDs found in ${IDS_FILE}`);
+const TAGS = IDS ? `id:${IDS.join(",")}` : arg("--tags", "zaverose");
 const MAX = parseInt(arg("--max", "1000"), 10);
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -102,6 +117,12 @@ async function main() {
     .filter((a) => a.rating === "s")
     .slice(0, 5)
     .forEach((a) => (a.featured = true));
+
+  if (IDS) {
+    const got = new Set(out.map((a) => a.id));
+    const missing = IDS.filter((id) => !got.has(id));
+    if (missing.length) console.warn(`\nskipped (not found / no file URL): ${missing.join(", ")}`);
+  }
 
   await mkdir(dirname(OUT), { recursive: true });
   await writeFile(OUT, JSON.stringify(out, null, 2) + "\n");

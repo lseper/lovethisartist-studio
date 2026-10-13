@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import RequestForm from "@/islands/commission/RequestForm";
+import RotatedImg from "@/islands/RotatedImg";
+import type { Rotation } from "@/data/rotations";
 
 export interface YchCard {
   slug: string;
@@ -8,6 +10,7 @@ export interface YchCard {
   thumb: string;
   width: number;
   height: number;
+  rotate: Rotation;
 }
 
 interface Props {
@@ -42,10 +45,11 @@ export default function YchGallery({ offerings }: Props) {
       <div className="ych-grid">
         {offerings.map((o) => (
           <figure className="ych-card" key={o.slug}>
-            <img
+            <RotatedImg
               src={o.thumb}
               width={o.width}
               height={o.height}
+              rotate={o.rotate}
               alt={o.title}
               className="ych-img"
               loading="lazy"

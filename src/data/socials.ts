@@ -24,7 +24,7 @@ export const TRELLO_QUEUE = "https://trello.com/b/H51HnCLL/zavs-commission-queue
 export const SOCIALS: SocialLink[] = [
   // ---- SFW art ----
   { label: "Telegram", handle: "@zav_art", url: "https://t.me/zav_art", group: "art", nsfw: false, note: "One-stop shop for all art" },
-  { label: "Bluesky", handle: "@zaverose.art", url: "https://bsky.app/profile/zaverose.art", group: "art", nsfw: false },
+  { label: "Bluesky", handle: "@love.thisartist.studio", url: "https://bsky.app/profile/love.thisartist.studio", group: "art", nsfw: false },
   { label: "TikTok", handle: "@zaverose_art", url: "https://www.tiktok.com/@zaverose_art", group: "art", nsfw: false },
   { label: "Twitter / X", handle: "@zaverose", url: "https://twitter.com/zaverose", group: "art", nsfw: false },
   { label: "Reddit", handle: "u/Zaverose", url: "https://www.reddit.com/user/Zaverose", group: "art", nsfw: false },
@@ -42,7 +42,7 @@ export const SOCIALS: SocialLink[] = [
 
   // ---- NSFW ----
   { label: "Telegram (NSFW)", handle: "@zav_nsfw", url: "https://t.me/zav_nsfw", group: "nsfw", nsfw: true },
-  { label: "Bluesky (NSFW)", handle: "@zaverosead", url: "https://bsky.app/profile/zaverosead.bsky.social", group: "nsfw", nsfw: true },
+  { label: "Bluesky (NSFW)", handle: "@kill.thisartist.studio", url: "https://bsky.app/profile/kill.thisartist.studio", group: "nsfw", nsfw: true },
   { label: "FurAffinity", handle: "zaverose", url: "https://www.furaffinity.net/user/zaverose", group: "nsfw", nsfw: true },
   { label: "Twitter (NSFW)", handle: "@zaverose_nsfw", url: "https://twitter.com/zaverose_nsfw", group: "nsfw", nsfw: true },
 

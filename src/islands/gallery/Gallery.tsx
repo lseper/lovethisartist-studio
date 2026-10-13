@@ -5,6 +5,7 @@ import { getMode, onModeChange } from "@/lib/mode";
 import { filterByTags, tagCounts } from "@/lib/tags";
 import TagFilter from "./TagFilter";
 import Lightbox from "./Lightbox";
+import RotatedImg from "@/islands/RotatedImg";
 
 interface Props {
   /** SFW-only art, server-rendered into the page. */
@@ -63,9 +64,12 @@ export default function Gallery({ initialArt, fullEndpoint }: Props) {
     return counts.filter((t) => t.tag.toLowerCase().includes(q));
   }, [counts, query]);
 
+  // Tag filtering is an NSFW-only feature; in SFW mode it's hidden and inert.
+  const showFilter = mode === "nsfw";
+
   const shown = useMemo(
-    () => filterByTags(modeArt, active),
-    [modeArt, active]
+    () => (showFilter ? filterByTags(modeArt, active) : modeArt),
+    [showFilter, modeArt, active]
   );
 
   function toggleTag(tag: string) {
@@ -86,18 +90,20 @@ export default function Gallery({ initialArt, fullEndpoint }: Props) {
   }
 
   return (
-    <div className="gallery">
-      <aside className="gallery-filter">
-        <TagFilter
-          query={query}
-          onQuery={setQuery}
-          tags={shownTags}
-          active={active}
-          onToggleTag={toggleTag}
-          onClear={() => setActive(new Set())}
-          total={shown.length}
-        />
-      </aside>
+    <div className={showFilter ? "gallery" : "gallery gallery--plain"}>
+      {showFilter && (
+        <aside className="gallery-filter">
+          <TagFilter
+            query={query}
+            onQuery={setQuery}
+            tags={shownTags}
+            active={active}
+            onToggleTag={toggleTag}
+            onClear={() => setActive(new Set())}
+            total={shown.length}
+          />
+        </aside>
+      )}
 
       <div className="gallery-grid">
         {shown.length === 0 ? (
@@ -111,10 +117,11 @@ export default function Gallery({ initialArt, fullEndpoint }: Props) {
               onClick={() => setOpenId(a.id)}
               aria-label={`Open ${a.title}`}
             >
-              <img
+              <RotatedImg
                 src={a.thumb}
                 width={a.width}
                 height={a.height}
+                rotate={a.rotate}
                 alt={a.title}
                 loading="lazy"
                 decoding="async"
@@ -135,6 +142,7 @@ export default function Gallery({ initialArt, fullEndpoint }: Props) {
           gap: var(--gutter);
           align-items: start;
         }
+        .gallery--plain { grid-template-columns: 1fr; }
         .gallery-filter {
           position: sticky; top: var(--gutter);
           height: calc(100dvh - var(--gutter) * 2);
@@ -154,6 +162,7 @@ export default function Gallery({ initialArt, fullEndpoint }: Props) {
         }
         .thumb:hover, .thumb:focus-visible { border-color: var(--accent); }
         .thumb img { width: 100%; height: auto; display: block; }
+        .thumb .rimg { width: 100%; }
         .empty { color: var(--ink-faint); }
         @media (max-width: 960px) {
           .gallery { grid-template-columns: 1fr; }

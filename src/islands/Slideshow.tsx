@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import type { Rotation } from "@/data/rotations";
+import RotatedImg from "./RotatedImg";
 
 /*
   Featured-art cross-fade for the landing page. Auto-advances (~4s), pauses on
@@ -13,6 +15,7 @@ export interface SlideArt {
   full: string;
   width: number;
   height: number;
+  rotate: Rotation;
   title: string;
 }
 
@@ -54,10 +57,11 @@ export default function Slideshow({ art }: Props) {
       <section className="ss-grid" aria-label="Featured art">
         {art.map((a) => (
           <a key={a.id} href="/art" className="ss-grid-item" aria-label={a.title}>
-            <img
+            <RotatedImg
               src={a.thumb}
               width={a.width}
               height={a.height}
+              rotate={a.rotate}
               alt={a.title}
               loading="lazy"
               decoding="async"
@@ -88,10 +92,11 @@ export default function Slideshow({ art }: Props) {
             tabIndex={i === index ? 0 : -1}
             aria-label={a.title}
           >
-            <img
+            <RotatedImg
               src={a.thumb}
               width={a.width}
               height={a.height}
+              rotate={a.rotate}
               alt={a.title}
               loading="lazy"
               decoding="async"
@@ -136,6 +141,7 @@ export default function Slideshow({ art }: Props) {
           transition: opacity var(--dur-slow) var(--ease);
         }
         .ss-slide.on { opacity: 1; }
+        .ss-slide .rimg { width: 100%; height: 100%; }
         .ss-slide img {
           width: 100%;
           height: 100%;
@@ -182,6 +188,7 @@ const gridStyles = `
   }
   .ss-grid-item:hover,
   .ss-grid-item:focus-visible { border-color: var(--accent); }
+  .ss-grid-item .rimg { width: 100%; }
   .ss-grid-item img {
     width: 100%;
     height: auto;

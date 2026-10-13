@@ -1,4 +1,4 @@
-# LOVE / HATE THIS ARTIST
+# LOVE / KILL THIS ARTIST
 
 Art portfolio and commission storefront for the artist **Zaverose**. Brutalist
 "technical software" aesthetic; a global SFW/NSFW mode toggle drives the whole

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import type { Artwork } from "@/lib/art";
 import { ratingLabel } from "@/lib/rating";
+import RotatedImg from "@/islands/RotatedImg";
 
 interface Props {
   art: Artwork;
@@ -46,10 +47,11 @@ export default function Lightbox({ art, onClose, onNav }: Props) {
 
       <figure className="lb-fig">
         <a href={art.full} target="_blank" rel="noopener" className="lb-imglink">
-          <img
+          <RotatedImg
             src={art.thumb}
             width={art.width}
             height={art.height}
+            rotate={art.rotate}
             alt={art.title}
             className="lb-img"
           />
@@ -122,6 +124,11 @@ export default function Lightbox({ art, onClose, onNav }: Props) {
           width: auto; height: auto; margin: 0 auto;
           border: 1px solid var(--line);
         }
+        /* Rotated wrapper has no intrinsic size: fit it to the same bounds. */
+        .lb-img.rimg {
+          width: min(100%, calc((100dvh - var(--gutter) * 2) * var(--ar)));
+          max-height: none;
+        }
         .lb-meta {
           min-width: 0;
           max-height: calc(100dvh - var(--gutter) * 2);
@@ -146,6 +153,7 @@ export default function Lightbox({ art, onClose, onNav }: Props) {
             max-height: none; overflow: visible;
           }
           .lb-img { max-height: 70dvh; }
+          .lb-img.rimg { width: min(100%, calc(70dvh * var(--ar))); max-height: none; }
           .lb-meta { max-height: none; overflow: visible; }
           .lb-arrow { font-size: var(--step-2); }
         }

@@ -20,7 +20,7 @@ export const RATING_THRESHOLD: Rating = "e";
 /** Mode-driven brand wordmark (r3drunner-style: wordmark ≠ handle). */
 export const BRAND = {
   sfw: "LOVE THIS ARTIST",
-  nsfw: "HATE THIS ARTIST",
+  nsfw: "KILL THIS ARTIST",
 } as const satisfies Record<Mode, string>;
 
 /** Short technical-software chrome, à la r3drunner's "1.4.4". */

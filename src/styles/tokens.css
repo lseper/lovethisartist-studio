@@ -4,7 +4,7 @@
 
   Two brand skins are driven by [data-mode] on <html>:
     - sfw  → "LOVE THIS ARTIST" — clean, electric spring-green accent
-    - nsfw → "HATE THIS ARTIST" — hotter, red accent
+    - nsfw → "KILL THIS ARTIST" — hotter, red accent
 
   Runtime-swappable values live as CSS custom properties here; Tailwind's
   compile-time @theme (global.css) maps utilities onto these vars.
@@ -66,7 +66,7 @@
   --z-gate: 100;
 }
 
-/* NSFW skin — "HATE THIS ARTIST" */
+/* NSFW skin — "KILL THIS ARTIST" */
 [data-mode="nsfw"] {
   --accent: #ff2d4d;
   --accent-ink: #ffffff;

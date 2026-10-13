@@ -24,7 +24,7 @@ never see explicit art.
 Brutalist, technical, confident, a little tongue-in-cheek. The site presents
 itself like a piece of proprietary software: version number, CHANGELOG, SETTINGS,
 monoline icons, ALL-CAPS navigation. Copy is terse and declarative. The wordmark
-is the joke: **LOVE THIS ARTIST** in safe mode, **HATE THIS ARTIST** once you
+is the joke: **LOVE THIS ARTIST** in safe mode, **KILL THIS ARTIST** once you
 opt into explicit content.
 
 ## Core mechanic — SFW / NSFW mode
@@ -36,7 +36,7 @@ rating (`s`/`q`/`e`):
   URLs are never in the SSR HTML.
 - **NSFW.** First switch shows an **18+ age gate** (remembered via cookie). Once
   accepted, the explicit set is lazy-fetched from `/art-full.json`, the wordmark
-  flips to HATE THIS ARTIST, and the accent turns red.
+  flips to KILL THIS ARTIST, and the accent turns red.
 
 Mode also gates NSFW social links and the STREAM video section.
 
@@ -58,7 +58,7 @@ Mode also gates NSFW social links and the STREAM video section.
 - **Fast.** Thumbnails are e621 `sample` images served off their CDN; the
   lightbox links to the full file. Can move to self-hosted AVIF later without
   schema changes (the `thumb`/`full` fields are just URLs).
-- **Identity stays Zaverose.** LOVE/HATE THIS ARTIST is a wordmark gag only;
+- **Identity stays Zaverose.** LOVE/KILL THIS ARTIST is a wordmark gag only;
   handles, email, and branding remain Zaverose.
 - **Accessibility & motion.** Keyboard-navigable, respects
   `prefers-reduced-motion` (the R3F hero renders a single static frame).
